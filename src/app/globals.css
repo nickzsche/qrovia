@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #08070d;
+  --bg-soft: #0e0c17;
+  --bg-card: #14111f;
+  --line: #241f38;
+  --ink: #ece9f6;
+  --ink-dim: #a49ec2;
+  --violet: #8b5cf6;
+  --lime: #a3e635;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.4);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #2b2545;
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- reusable pieces ---------- */
+.gradient-text {
+  background: linear-gradient(92deg, #8b5cf6 10%, #c4b5fd 45%, #a3e635 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all;
+  background: linear-gradient(95deg, var(--violet), #6d28d9 60%, #4c1d95);
+  color: white;
+  box-shadow: 0 8px 30px -10px rgba(139, 92, 246, 0.7);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 34px -10px rgba(139, 92, 246, 0.9);
+}
+
+.btn-lime {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all;
+  background: linear-gradient(95deg, #bef264, var(--lime));
+  color: #101403;
+  box-shadow: 0 8px 26px -12px rgba(163, 230, 53, 0.8);
+}
+.btn-lime:hover {
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--line)] bg-white/[0.02] px-5 py-2.5 text-sm font-medium text-[var(--ink-dim)] transition-colors hover:border-violet-500/50 hover:text-white;
+}
+
+.card {
+  @apply rounded-2xl border border-[var(--line)] bg-[#12101d];
+}
+
+.input {
+  @apply w-full rounded-xl border border-[var(--line)] bg-black/30 px-4 py-2.5 text-sm text-[var(--ink)] placeholder:text-[#585279] outline-none transition-colors focus:border-violet-500/70;
+}
+.input:focus {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.label {
+  @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--ink-faint)];
+}
+
+.chip {
+  @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold;
+}
+
+.hero-glow {
+  background:
+    radial-gradient(600px 300px at 15% 10%, rgba(139, 92, 246, 0.22), transparent 65%),
+    radial-gradient(700px 340px at 85% 20%, rgba(163, 230, 53, 0.1), transparent 60%);
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 35%, transparent 75%);
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-floaty {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+@keyframes scanline {
+  0% { top: 8%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { top: 86%; opacity: 0; }
+}
+.scan-line {
+  animation: scanline 2.6s ease-in-out infinite alternate;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fade-up 0.55s ease both;
+}
