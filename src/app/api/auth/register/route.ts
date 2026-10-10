@@ -40,14 +40,13 @@ export async function POST(req: Request) {
   const [user] = await db
     .insert(schema.users)
     .values({
+      name,
       email: normalizedEmail,
-      // `name` is accepted for profile completeness; display uses email prefix for now.
       passwordHash: hashPassword(password),
       plan: "free",
     })
     .returning();
 
-  void name;
   const token = await createSessionToken(user.id, user.email);
   const res = NextResponse.json({ ok: true });
   res.cookies.set(SESSION_COOKIE, token, sessionCookieOptions);

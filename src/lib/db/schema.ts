@@ -7,6 +7,7 @@ import {
 
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name"),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   plan: text("plan", { enum: ["free", "pro", "business"] })

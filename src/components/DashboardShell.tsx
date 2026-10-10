@@ -19,11 +19,12 @@ export function DashboardShell({
   active,
   children,
 }: {
-  user: { email: string; plan: string };
+  user: { name?: string | null; email: string; plan: string };
   active: "dashboard" | "plans" | "settings";
   children: React.ReactNode;
 }) {
   const plan = PLAN_META[user.plan] ?? PLAN_META.free;
+  const displayName = user.name?.trim() || user.email.split("@")[0];
   return (
     <div className="flex min-h-screen">
       {/* mobile top bar */}
@@ -51,8 +52,9 @@ export function DashboardShell({
           >
             ✦ {plan.label} plan
           </Link>
-          <div className="truncate rounded-xl bg-black/30 px-3 py-2 text-xs text-[var(--ink-faint)]" title={user.email}>
-            {user.email}
+          <div className="min-w-0 rounded-xl bg-black/30 px-3 py-2" title={user.email}>
+            <p className="truncate text-xs font-semibold text-[var(--ink-dim)]">{displayName}</p>
+            <p className="truncate text-[11px] text-[var(--ink-faint)]">{user.email}</p>
           </div>
           <LogoutButton />
         </div>

@@ -29,12 +29,18 @@ function migrateRaw(sqlite: Database.Database) {
   sqlite.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
       email TEXT NOT NULL UNIQUE,
       password_hash TEXT NOT NULL,
       plan TEXT NOT NULL DEFAULT 'free',
       created_at INTEGER NOT NULL
     );
   `);
+  // Idempotent upgrade for databases created before `name` existed.
+  const userCols = sqlite.prepare("PRAGMA table_info(users)").all() as { name: string }[];
+  if (!userCols.some((c) => c.name === "name")) {
+    sqlite.exec("ALTER TABLE users ADD COLUMN name TEXT");
+  }
   sqlite.exec(`
     CREATE TABLE IF NOT EXISTS campaigns (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -40,12 +40,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardShell user={user} active="dashboard">
-      <CampaignGrid
-        initialCards={cards}
-        plan={user.plan}
-        email={user.email}
-        userName={user.email.split("@")[0]}
-      />
+      <CampaignGrid initialCards={cards} plan={user.plan} />
     </DashboardShell>
   );
 }

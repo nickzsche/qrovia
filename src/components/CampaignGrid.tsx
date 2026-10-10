@@ -25,8 +25,6 @@ export function CampaignGrid({
 }: {
   initialCards: CampaignCardData[];
   plan: string;
-  email?: string;
-  userName?: string;
 }) {
   const router = useRouter();
   const [cards, setCards] = useState(initialCards);

@@ -14,6 +14,10 @@ export default async function SettingsPage() {
           <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--ink-dim)]">Account</h2>
           <dl className="mt-4 space-y-4 text-sm">
             <div className="flex flex-wrap justify-between gap-2">
+              <dt className="text-[var(--ink-faint)]">Name</dt>
+              <dd className="font-medium">{user.name?.trim() || user.email.split("@")[0]}</dd>
+            </div>
+            <div className="flex flex-wrap justify-between gap-2">
               <dt className="text-[var(--ink-faint)]">Email</dt>
               <dd className="font-medium">{user.email}</dd>
             </div>
