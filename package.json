@@ -2,10 +2,15 @@
   "name": "qrovia",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.6.0"
+  },
   "scripts": {
     "dev": "next dev -p 3430",
     "build": "next build",
-    "start": "next start -p 3430"
+    "start": "next start -p 3430",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --experimental-strip-types --test tests/lib.test.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
