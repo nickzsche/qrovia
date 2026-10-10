@@ -6,6 +6,7 @@ import {
   updateCampaign,
   deleteCampaign,
 } from "@/lib/campaigns";
+import { isSafeTargetUrl } from "@/lib/urls";
 
 export const runtime = "nodejs";
 
@@ -13,7 +14,14 @@ type Params = { params: { id: string } };
 
 const patchSchema = z.object({
   name: z.string().trim().min(1).max(80).optional(),
-  targetUrl: z.string().trim().url().max(1000).optional(),
+  // Scheme-allowlisted (http/https/mailto/tel/sms): a destination is only ever
+  // emitted as a 302 Location, so reject javascript:/data: here at the boundary.
+  targetUrl: z
+    .string()
+    .trim()
+    .max(1000)
+    .refine(isSafeTargetUrl, { message: "Unsupported URL scheme" })
+    .optional(),
   status: z.enum(["active", "paused"]).optional(),
 });
 

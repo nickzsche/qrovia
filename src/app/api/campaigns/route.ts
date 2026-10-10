@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSessionUser } from "@/lib/session";
 import { createCampaign } from "@/lib/campaigns";
 import { getDb, schema } from "@/lib/db";
-import { eq, and } from "drizzle-orm";
+import { isSafeTargetUrl } from "@/lib/urls";
 
 export const runtime = "nodejs";
 
@@ -18,12 +18,6 @@ const createSchema = z.object({
   type: z.enum(["dynamic", "static"]),
   targetUrl: z.string().trim().max(1000).optional(),
   staticPayload: z.string().trim().max(1000).optional(),
-});
-
-const patchSchema = z.object({
-  name: z.string().trim().min(1).max(80).optional(),
-  targetUrl: z.string().trim().url().max(1000).optional(),
-  status: z.enum(["active", "paused"]).optional(),
 });
 
 export async function GET() {
@@ -54,7 +48,7 @@ export async function POST(req: Request) {
   const { name, type, targetUrl, staticPayload } = parsed.data;
 
   if (type === "dynamic") {
-    if (!targetUrl || !/^https?:\/\/.+\..+/i.test(targetUrl)) {
+    if (!targetUrl || !/^https?:\/\//i.test(targetUrl) || !isSafeTargetUrl(targetUrl)) {
       return NextResponse.json(
         { error: "Dynamic codes need a full destination URL (https://…)" },
         { status: 400 },

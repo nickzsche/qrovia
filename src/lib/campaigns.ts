@@ -1,7 +1,7 @@
 import { getDb, schema } from "@/lib/db";
 import { ensureSeed } from "@/lib/seed";
 import { newCode } from "@/lib/codes";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export async function uniqueCode(): Promise<string> {
   const db = getDb();
@@ -58,12 +58,18 @@ export async function updateCampaign(
   await db
     .update(schema.campaigns)
     .set(patch)
-    .where(eq(schema.campaigns.id, campaignId));
+    .where(
+      // Scope by owner as well as id: callers already authorize, but this keeps
+      // a mis-issued id from ever touching another user's row.
+      and(eq(schema.campaigns.id, campaignId), eq(schema.campaigns.userId, userId)),
+    );
 }
 
 export async function deleteCampaign(campaignId: number, userId: number) {
   const db = getDb();
   await db
     .delete(schema.campaigns)
-    .where(eq(schema.campaigns.id, campaignId));
+    .where(
+      and(eq(schema.campaigns.id, campaignId), eq(schema.campaigns.userId, userId)),
+    );
 }

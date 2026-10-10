@@ -3,20 +3,13 @@ import { getDb, schema } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { parseUserAgent } from "@/lib/ua";
 import type { DeviceKind, OsName, BrowserName } from "@/lib/ua";
+import { normalizeTarget } from "@/lib/urls";
 
 export const runtime = "nodejs";
 // Never cache: each scan must hit the server so we can log it and honor pause state.
 export const dynamic = "force-dynamic";
 
 type Params = { params: { code: string } };
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 const PAUSED_PAGE = `<!doctype html>
 <html lang="en">
@@ -54,17 +47,6 @@ const PAUSED_PAGE = `<!doctype html>
   </div>
 </body>
 </html>`;
-
-function normalizeTarget(raw: string): string | null {
-  const t = raw.trim();
-  if (!t) return null;
-  if (/^https?:\/\//i.test(t)) return t;
-  // Allow scheme-less targets like example.com/path — treat as https.
-  if (/^[\w-]+(\.[\w-]+)+/.test(t)) return `https://${t}`;
-  // mailto:, tel:, etc. are allowed as-is.
-  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(t)) return t;
-  return null;
-}
 
 export async function GET(_req: Request, { params }: Params) {
   const code = params.code;
