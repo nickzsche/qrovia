@@ -85,6 +85,16 @@ test("isValidCode rejects ambiguous or out-of-range codes", () => {
   assert.equal(isValidCode("abc120"), false);
 });
 
+test("every generated code passes isValidCode", () => {
+  // Regression: the validator once used a hand-written regex that rejected `i`,
+  // which newCode emits — a fresh code could fail its own validator.
+  assert.equal(isValidCode("iiii2222"), true);
+  for (let i = 0; i < 5000; i++) {
+    const c = newCode();
+    assert.equal(isValidCode(c), true, `generated code rejected: ${c}`);
+  }
+});
+
 /* -------------------------------- qr ------------------------------ */
 
 test("sanitizeStyle clamps size/margin and validates colors + ECC", () => {

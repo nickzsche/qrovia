@@ -1,6 +1,10 @@
 import crypto from "node:crypto";
 
-const ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789"; // no ambiguous chars (l, o, 0, 1)
+// 32 chars, no ambiguous glyphs (l, o, 0, 1) → modulo is unbiased (256 % 32 === 0).
+const ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789";
+
+// Derived from ALPHABET so the validator can never drift from the generator again.
+const CODE_RE = new RegExp(`^[${ALPHABET}]{4,32}$`);
 
 export function newCode(len = 7): string {
   const bytes = crypto.randomBytes(len);
@@ -12,5 +16,5 @@ export function newCode(len = 7): string {
 }
 
 export function isValidCode(code: string): boolean {
-  return /^[a-hj-km-np-z2-9]{4,32}$/.test(code);
+  return CODE_RE.test(code);
 }
